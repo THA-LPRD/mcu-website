@@ -1,0 +1,33 @@
+{
+	"name": "MCU-Website Dev Container",
+	"dockerFile": "Dockerfile",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": "true",
+			"username": "node",
+			"upgradePackages": "true"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"aaron-bond.better-comments",
+				"visualstudioexptteam.vscodeintellicode",
+				"visualstudioexptteam.intellicode-api-usage-examples",
+				"visualstudioexptteam.vscodeintellicode-completions",
+				"streetsidesoftware.code-spell-checker",
+				"streetsidesoftware.code-spell-checker-german",
+				"waderyan.gitblame",
+				"eamodio.gitlens",
+				"gruntfuggly.todo-tree"
+			]
+		},
+		"settings": {
+			"remote.containers.copyGitConfig": true
+		}
+	},
+	"forwardPorts": [
+		3000
+	],
+	"remoteUser": "node"
+}
