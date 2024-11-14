@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
-import {SkeletonLoaderDisplay} from './SkeletonLoader';
+import { SkeletonLoaderDisplay } from "./SkeletonLoader";
 import {ApiService} from '@/utils/apiService';
 
 export function DisplaySettings() {

@@ -1,11 +1,9 @@
-'use client';
-
-import {useEffect, useState} from 'react';
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
+import React, {useEffect, useState} from 'react';
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card';
 import {Button} from '@/components/ui/button';
 import {HTTPSSwitch} from './HTTPSSwitch';
 import {HTTPSContents} from './HTTPSContents';
-import {SkeletonLoaderHTTPS} from './SkeletonLoader'
+import {SkeletonLoaderHTTPS} from './SkeletonLoader';
 import {ApiService} from '@/utils/apiService';
 
 interface HTTPSServerSettingsProps {
@@ -15,6 +13,7 @@ interface HTTPSServerSettingsProps {
 export function HTTPSServerSettings({onLoad}: HTTPSServerSettingsProps) {
     const [selectedHttps, setSelectedHttps] = useState<boolean | null>(null);
     const [httpsPort, setHttpsPort] = useState<string | null>(null);
+    
     const {data: httpsStatus, error: error1, isLoading: loading1} = ApiService.useHttpsStatus();
     const {data: fetchedHttpsPort, error: error2, isLoading: loading2} = ApiService.useHttpsPort();
 
@@ -38,9 +37,7 @@ export function HTTPSServerSettings({onLoad}: HTTPSServerSettingsProps) {
         <Card>
             <CardHeader>
                 <CardTitle>HTTPS Server</CardTitle>
-                <CardDescription>
-                    Configure the HTTPS server settings.
-                </CardDescription>
+                <CardDescription>Configure the HTTPS server settings.</CardDescription>
             </CardHeader>
             <CardContent>
                 <form className="flex flex-col gap-4">

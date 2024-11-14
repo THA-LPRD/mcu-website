@@ -1,6 +1,7 @@
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {ModeContent} from './ModeContent';
-import {Mode} from '@/utils/schemas/application';
+import React from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ModeContent } from './ModeContent';
+import { Mode } from '@/utils/schemas/application';
 
 type ModeTabsProps = {
     activeTab: string | null;
@@ -8,7 +9,7 @@ type ModeTabsProps = {
     selectedMode: string | null;
 };
 
-export function ModeTabs({activeTab, onTabChange, selectedMode}: ModeTabsProps) {
+export function ModeTabs({ activeTab, onTabChange, selectedMode }: ModeTabsProps) {
     return (
         <Tabs value={activeTab || undefined} onValueChange={onTabChange} className="w-full">
             <TabsList className={`grid w-full grid-cols-3`}>
@@ -21,7 +22,7 @@ export function ModeTabs({activeTab, onTabChange, selectedMode}: ModeTabsProps) 
 
             {Object.entries(Mode).map(([key, label]) => (
                 <TabsContent key={key} value={label}>
-                    <ModeContent mode={label} selectedMode={selectedMode}/>
+                    <ModeContent mode={label} selectedMode={selectedMode} />
                 </TabsContent>
             ))}
         </Tabs>

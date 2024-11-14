@@ -7,12 +7,12 @@ export enum Mode {
 }
 
 export enum LogLevel {
-    Trace = "Trace",
-    Debug = "Debug",
-    Info = "Info",
-    Warn = "Warn",
-    Error = "Error",
-    Critical = "Critical",
+    Trace = "trace",
+    Debug = "debug",
+    Info = "info",
+    Warn = "warn",
+    Error = "error",
+    Critical = "critical",
 }
 
 export enum DisplayDriver {

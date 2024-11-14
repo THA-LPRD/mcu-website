@@ -1,12 +1,13 @@
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Mode} from '@/utils/schemas/application';
+import React from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Mode } from '@/utils/schemas/application';
 
 type SelectModeProps = {
     selectedMode: string | null;
     onSelectChange: (value: string) => void;
 };
 
-export const SelectMode = ({selectedMode, onSelectChange}: SelectModeProps) => (
+export const SelectMode = ({ selectedMode, onSelectChange }: SelectModeProps) => (
     <div className="mb-4">
         <Select value={selectedMode || undefined} onValueChange={onSelectChange}>
             <SelectTrigger className="w-[190px]">

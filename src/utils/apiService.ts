@@ -69,29 +69,29 @@ function useApiData<T extends string | number | boolean>(
 
 export const ApiService = {
     useOperatingMode: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}/getOpMode', validateOperatingMode, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}/getOpMode`, validateOperatingMode, onSuccess, onError),
 
     useLogLevel: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}/getLogLevel', validateLogLevel, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}/getLogLevel`, validateLogLevel, onSuccess, onError),
 
     useDisplayDriver: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}1/getDisplayDriver', validateDisplayDriver, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}/getDisplayDriver`, validateDisplayDriver, onSuccess, onError),
 
     useHttpsPort: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}1/getHttpsPort', validateHTTPSPort, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}1/getHttpsPort`, validateHTTPSPort, onSuccess, onError),
 
     useHttpPort: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}/getHttpPort', validateHTTPPort, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}/getHttpPort`, validateHTTPPort, onSuccess, onError),
 
     useHttpsStatus: (onSuccess?: (data: string) => void, onError?: (error: unknown) => void) =>
-        useApiData<string>('${API_BASE_URL}/getHttps', validateHTTPS, onSuccess, onError),
+        useApiData<string>(`${API_BASE_URL}/getHttps`, validateHTTPS, onSuccess, onError),
 
     useSetOpMode: () => {
-        return useSWRMutation('${API_BASE_URL}/setOpMode', setter);
+        return useSWRMutation(`${API_BASE_URL}/setOpMode`, setter);
     },
 
     useSetLogLevel: () => {
-        return useSWRMutation('${API_BASE_URL}/setLogLevel', setter);
+        return useSWRMutation(`${API_BASE_URL}/setLogLevel`, setter);
     },
 };
 /* eslint-enable @typescript-eslint/no-unused-vars */

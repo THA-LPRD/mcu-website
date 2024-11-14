@@ -2,10 +2,10 @@
 
 import { LogLevelSelect } from "@/components/LogLevelSelect";
 import { SettingsCard } from "@/components/SettingsCard";
-import {Form, FormField} from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Toaster } from "@/components/ui/toaster";
 import { useLogLevelForm } from "@/hooks/useLogLevel";
-import {SkeletonLoaderLog} from "@/app/settings/advanced/SkeletonLoader";
+import { SkeletonLoaderLog } from "./SkeletonLoader";
 
 export function LogLevelSettings() {
     const { form, onSubmit, isMutating, isLoading, fetchError } = useLogLevelForm();

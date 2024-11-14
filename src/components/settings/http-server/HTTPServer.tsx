@@ -1,7 +1,5 @@
-'use client';
-
-import {useState} from 'react';
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
+import React, {useState} from 'react';
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
@@ -19,7 +17,7 @@ export function HTTPServerSettings({onLoad}: HTTPServerSettingsProps) {
             onLoad(true);
         },
         (err) => {
-            console.error('Failed to fetch HTTPS status:', err);
+            console.error('Failed to fetch HTTP status:', err);
             onLoad(true);
         }
     );
