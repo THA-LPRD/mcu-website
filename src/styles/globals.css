@@ -6,6 +6,57 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Reset CSS for acurate preview */
+.preview-content {
+  all: revert;
+  font-family: Arial;
+  font-size: initial;
+  line-height: initial;
+  color: black;
+}
+
+.preview-content h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+.preview-content h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+.preview-content p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.preview-content ul {
+  display: block;
+  list-style-type: disc;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 40px;
+}
+
+.preview-content li {
+  display: list-item;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

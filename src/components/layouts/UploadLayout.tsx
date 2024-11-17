@@ -6,12 +6,12 @@ import { PNGUpload } from '@/components/upload/PNGUpload/PNGUpload';
 import { HTMLtoPNG } from '@/components/upload/HTMLtoPNG/HTMLtoPNG';
 import { Template } from '@/components/upload/Template/Template';
 
-const ImageTools = () => {
+export default function ImageTools() {
     const [selectedTab, setSelectedTab] = useState('png-upload');
-    const [previewImage, setPreviewImage] = useState(null);
+    // const [previewImage, setPreviewImage] = useState(null);
     
     return (
-      <div className="container mx-auto p-4 max-w-4xl">
+      <div className="container mx-auto p-4 max-w-5xl">
         <Tabs defaultValue="png-upload" className="w-full">
           <TabsList className="w-full mb-6">
             <TabsTrigger value="png-upload" className="flex-1">
@@ -42,5 +42,3 @@ const ImageTools = () => {
       </div>
     );
 }
-
-export default ImageTools;
