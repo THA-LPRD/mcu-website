@@ -1,4 +1,6 @@
-import { Eye } from 'lucide-react';
+import { useState, useRef } from 'react';
+
+import { Eye, Upload } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,8 +9,16 @@ import { Button } from '@/components/ui/button';
 
 
 export function Template() {
+    const [htmlContent, setHtmlContent] = useState('<div style="padding: 25%; height: 100%; text-align: center; font-size: 48px; color: gray; display: flex; justify-content: center; align-items: center">Preview here</div>');
+    const previewRef = useRef(null);
+    // const [isExporting, setIsExporting] = useState(false);
+
+    const createMarkup = (html: string) => {
+        return { __html: html };
+    };
+
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
             <Card>
               <CardHeader>
                 <CardTitle>Template Configuration</CardTitle>
@@ -44,17 +54,42 @@ export function Template() {
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle>Template Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border rounded-lg p-4 min-h-[400px] bg-gray-50">
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    Template preview will appear here
-                  </div>
-                </div>
-                <Button className="mt-4">Download PNG</Button>
-              </CardContent>
+                <CardHeader>
+                    <CardTitle>Preview</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="border rounded-lg bg-gray-50 h-[480px] w-[800px]">
+                        <div 
+                        ref={previewRef} 
+                        className="preview-content h-[480px] w-[800px]"
+                        dangerouslySetInnerHTML={createMarkup(htmlContent)}>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>HTML Input</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Textarea
+                        placeholder="Enter your HTML here..."
+                        className="min-h-[300px]"
+                        onChange={(e) => setHtmlContent(e.target.value)}
+                        spellCheck="false"
+                    />
+                    <Button 
+                    className="mt-4"
+                    // onClick={setIsExporting(true)}
+                    // disabled={isExporting}
+                    >
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Image
+                    </Button>
+                </CardContent>
             </Card>
           </div>
     );

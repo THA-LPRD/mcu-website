@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Upload, Settings, Image as ImageIcon } from 'lucide-react';
 import { PNGUpload } from '@/components/upload/PNGUpload/PNGUpload';
 import { HTMLtoPNG } from '@/components/upload/HTMLtoPNG/HTMLtoPNG';
 import { Template } from '@/components/upload/Template/Template';
 
 export default function ImageTools() {
-    const [selectedTab, setSelectedTab] = useState('png-upload');
+    // const [selectedTab, setSelectedTab] = useState('png-upload');
     // const [previewImage, setPreviewImage] = useState(null);
     
     return (

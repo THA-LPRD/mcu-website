@@ -13,11 +13,11 @@ export function HTMLtoPNG() {
     const previewRef = useRef(null);
     const [isExporting, setIsExporting] = useState(false);
 
-    const createMarkup = (html) => {
+    const createMarkup = (html: string) => {
         return { __html: html };
     };
 
-    const uploadPNG = async (fileData, fileName, url) => {
+    const uploadPNG = async (fileData: Blob, fileName: string, url: string) => {
         try {
             const formData = new FormData();
             formData.append('file', fileData, fileName);
@@ -35,7 +35,11 @@ export function HTMLtoPNG() {
             }
         } catch (error) {
             console.error('Fehler beim Hochladen der Datei:', error);
-            return { success: false, message: 'Fehler beim Hochladen der Datei: ' + error.message };
+            if (error instanceof Error) {
+                return { success: false, message: 'Fehler beim Hochladen der Datei: ' + error.message };
+            } else {
+                return { success: false, message: 'Fehler beim Hochladen der Datei' };
+            }
         }
     }
 
@@ -73,6 +77,7 @@ export function HTMLtoPNG() {
             // URL.revokeObjectURL(url);
           }, 'image/png');
         } catch (error) {
+            console.log(error);
           // setErrorMessage('Export fehlgeschlagen: ' + error.message);
         } finally {
           setIsExporting(false);

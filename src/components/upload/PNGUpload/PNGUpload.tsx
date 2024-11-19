@@ -4,39 +4,52 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+interface UploadResponse {
+  success: boolean;
+  message: string;
+}
 
 export function PNGUpload() {
 
+    
+
     const precheckImage = async () => {
-        var fileInput = document.getElementById('png-upload');
+      const fileInput = document.getElementById('png-upload') as HTMLInputElement | null;
 
-    // Überprüfen, ob eine Datei ausgewählt wurde
-    if (fileInput.files.length === 0) {
-        alert('Bitte wählen Sie eine PNG-Datei aus.');
-        return;
-    }
-
-    var file = fileInput.files[0];
-
-    uploadImage(file, file.name, '/api/v1/UploadImg')
-                .then(result => {
-                    if (result.success) {
-                        alert(result.message);
-                    } else {
-                        alert(result.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error handling file upload:', error);
-                });
+      // Überprüfen, ob das Element existiert
+      if (!fileInput) {
+          alert('Dateiupload nicht möglich. Bitte laden Sie die Seite neu.');
+          return;
+      }
+  
+      // Überprüfen, ob eine Datei ausgewählt wurde
+      if (fileInput.files?.length === 0) {
+          alert('Bitte wählen Sie eine PNG-Datei aus.');
+          return;
+      }
+  
+      const file = fileInput.files?.[0];
+      
+      // Überprüfen, ob eine Datei existiert und vom Typ PNG ist
+      if (file && file.type === 'image/png') {
+          uploadImage(file, file.name, '/api/v1/UploadImg')
+              .then((result: UploadResponse) => {
+                  alert(result.message);
+              })
+              .catch((error: Error) => {
+                  console.error('Error handling file upload:', error);
+              });
+      } else {
+          alert('Bitte wählen Sie eine gültige PNG-Datei aus.');
+      }
     };
 
-    const uploadImage = async (fileData, fileName, url) => {
+    const uploadImage = async (file: File, fileName: string, uploadUrl: string): Promise<UploadResponse> => {
         try {
             const formData = new FormData();
-            formData.append('file', fileData, fileName);
+            formData.append('file', file, fileName);
     
-            const response = await fetch(url, {
+            const response = await fetch(uploadUrl, {
                 method: 'POST',
                 body: formData
             });
@@ -49,7 +62,11 @@ export function PNGUpload() {
             }
         } catch (error) {
             console.error('Fehler beim Hochladen der Datei:', error);
-            return { success: false, message: 'Fehler beim Hochladen der Datei: ' + error.message };
+            if (error instanceof Error) {
+              return { success: false, message: 'Fehler beim Hochladen der Datei: ' + error.message };
+          } else {
+              return { success: false, message: 'Fehler beim Hochladen der Datei' };
+          }
         }
     }
 
