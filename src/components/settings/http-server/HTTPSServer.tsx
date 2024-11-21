@@ -1,53 +1,114 @@
-import React, {useEffect, useState} from 'react';
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card';
-import {Button} from '@/components/ui/button';
-import {HTTPSSwitch} from './HTTPSSwitch';
-import {HTTPSContents} from './HTTPSContents';
+import React from 'react';
+import {Switch} from "@/components/ui/switch";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {SettingsCard} from "@/components/SettingsCard";
+import {Form, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Toaster} from "@/components/ui/toaster";
+import {useHttpsForm} from "@/hooks/useHttps";
 import {SkeletonLoaderHTTPS} from './SkeletonLoader';
-import {ApiService} from '@/utils/apiService';
 
 interface HTTPSServerSettingsProps {
     onLoad: (loaded: boolean) => void;
 }
 
 export function HTTPSServerSettings({onLoad}: HTTPSServerSettingsProps) {
-    const [selectedHttps, setSelectedHttps] = useState<boolean | null>(null);
-    const [httpsPort, setHttpsPort] = useState<string | null>(null);
-    
-    const {data: httpsStatus, error: error1, isLoading: loading1} = ApiService.useHttpsStatus();
-    const {data: fetchedHttpsPort, error: error2, isLoading: loading2} = ApiService.useHttpsPort();
+    const {form, onSubmit, isMutating, isLoading, fetchError} = useHttpsForm();
+    const isEnabled = form.watch("Enabled");
 
-    useEffect(() => {
-        if (!loading1 && !loading2) {
-            if (error1 || error2) {
-                console.error('Error fetching HTTPS settings:', error1, error2);
-                onLoad(false);
-            } else {
-                setSelectedHttps(!Boolean(httpsStatus));
-                setHttpsPort(fetchedHttpsPort ?? null);
-                onLoad(true);
-            }
+    React.useEffect(() => {
+        if (!isLoading) {
+            onLoad(true);
         }
-    }, [loading1, loading2, httpsStatus, fetchedHttpsPort, error1, error2, onLoad]);
+    }, [isLoading, onLoad]);
 
-    if (loading1 || loading2) return <SkeletonLoaderHTTPS/>;
-    if (error1 || error2) return <div>Error loading HTTPS settings</div>;
-
+    if (isLoading) return <SkeletonLoaderHTTPS/>;
+    if (fetchError) return <div>Error loading HTTPS settings</div>;
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>HTTPS Server</CardTitle>
-                <CardDescription>Configure the HTTPS server settings.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form className="flex flex-col gap-4">
-                    <HTTPSSwitch enabled={selectedHttps} onChange={setSelectedHttps}/>
-                    {selectedHttps && <HTTPSContents initialPort={httpsPort}/>}
-                </form>
-            </CardContent>
-            <CardFooter className="border-t px-6 py-4">
-                <Button>Save</Button>
-            </CardFooter>
-        </Card>
+        <Form {...form}>
+            <Toaster/>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                <SettingsCard
+                    isMutating={isMutating}
+                    title="HTTPS Server"
+                    description="Configure the HTTPS server settings."
+                >
+                    <FormField
+                        control={form.control}
+                        name="Enabled"
+                        render={({field}) => (
+                            <FormItem className="flex items-center space-x-2">
+                                <FormLabel>Enable HTTPS</FormLabel>
+                                <Switch
+                                    id="https"
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="Port"
+                        render={({field}) => (
+                            <FormItem className="space-y-1">
+                                <FormLabel className={!isEnabled ? "text-muted-foreground" : ""}>
+                                    Port
+                                </FormLabel>
+                                <Input
+                                    type="number"
+                                    id="https-port"
+                                    disabled={!isEnabled}
+                                    className={!isEnabled ? "bg-muted" : ""}
+                                    {...field}
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="Cert"
+                        render={({field}) => (
+                            <FormItem className="space-y-1">
+                                <FormLabel className={!isEnabled ? "text-muted-foreground" : ""}>
+                                    Certificate
+                                </FormLabel>
+                                <Textarea
+                                    placeholder="Enter contents of your certificate file"
+                                    disabled={!isEnabled}
+                                    className={!isEnabled ? "bg-muted" : ""}
+                                    {...field}
+                                />
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="Key"
+                        render={({field}) => (
+                            <FormItem className="space-y-1">
+                                <FormLabel className={!isEnabled ? "text-muted-foreground" : ""}>
+                                    Key
+                                </FormLabel>
+                                <Textarea
+                                    placeholder="Enter contents of your key file"
+                                    disabled={!isEnabled}
+                                    className={!isEnabled ? "bg-muted" : ""}
+                                    {...field}
+                                />
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                </SettingsCard>
+            </form>
+        </Form>
     );
 }

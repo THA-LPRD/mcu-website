@@ -1,41 +1,34 @@
-"use client"
-
-import * as React from "react";
+import React from "react";
 import {ReloadIcon} from "@radix-ui/react-icons";
 import {Button} from "@/components/ui/button";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip";
-import {LoadingSpinner} from "@/components/ui/loading-spinner";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {Spinner} from "@/components/ui/spinner";
+import {useRestart} from "@/hooks/useRestart";
 
 export default function RestartButton() {
-    const [isRestarting, setIsRestarting] = React.useState(false);
-
-    const handleRestart = async () => {
-        setIsRestarting(true);
-
-        // Simulate a restart process (for 5 seconds)
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-
-        // Simulate coming back online
-        setIsRestarting(false);
-    };
+    const {handleRestart, isRestarting} = useRestart();
 
     return (
         <>
-            {/* Fullscreen Overlay */}
             {isRestarting && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 !m-0">
                     <div className="flex flex-col items-center">
-                        <LoadingSpinner size={48} className="text-white mb-4"/>
-                        <p className="text-white text-lg">Restarting the Device...</p>
+                        <Spinner size="large" className="text-white mb-4"/>
+                        <span className="text-white">Restarting the Device...</span>
                     </div>
                 </div>
             )}
 
-            {/* Restart Button */}
             <TooltipProvider delayDuration={300}>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon" onClick={handleRestart} className="bg-muted border-muted">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={handleRestart}
+                            disabled={isRestarting}
+                            className="bg-muted border-muted"
+                        >
                             <ReloadIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-100 transition-all"/>
                         </Button>
                     </TooltipTrigger>

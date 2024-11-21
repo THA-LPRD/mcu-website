@@ -1,10 +1,10 @@
 // pages/settings/http-server/index.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import SettingsLayout from '@/components/layouts/SettingsLayout';
-import { AuthenticationSettings } from '@/components/settings/http-server/Authentication';
-import { HTTPServerSettings } from '@/components/settings/http-server/HTTPServer';
-import { HTTPSServerSettings } from '@/components/settings/http-server/HTTPSServer';
-import { SkeletonLoaderHTTP, SkeletonLoaderHTTPS } from '@/components/settings/http-server/SkeletonLoader';
+import {AuthenticationSettings} from '@/components/settings/http-server/Authentication';
+import {HTTPServerSettings} from '@/components/settings/http-server/HTTPServer';
+import {HTTPSServerSettings} from '@/components/settings/http-server/HTTPSServer';
+import {SkeletonLoaderHTTP, SkeletonLoaderHTTPS} from '@/components/settings/http-server/SkeletonLoader';
 
 export default function HTTPServerPage() {
     const [isHttpLoaded, setIsHttpLoaded] = useState(false);
@@ -23,12 +23,12 @@ export default function HTTPServerPage() {
     return (
         <SettingsLayout>
             <div className="grid gap-6">
-                <AuthenticationSettings />
-                {!isHttpLoaded && <SkeletonLoaderHTTP />}
-                <HTTPServerSettings onLoad={handleHttpLoad} />
+                <AuthenticationSettings/>
+                {!isHttpLoaded && <SkeletonLoaderHTTP/>}
+                <HTTPServerSettings onLoad={handleHttpLoad}/>
 
-                {!isHttpsLoaded && <SkeletonLoaderHTTPS />}
-                <HTTPSServerSettings onLoad={handleHttpsLoad} />
+                {!isHttpsLoaded && <SkeletonLoaderHTTPS/>}
+                <HTTPSServerSettings onLoad={handleHttpsLoad}/>
             </div>
         </SettingsLayout>
     );
