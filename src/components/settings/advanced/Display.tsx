@@ -1,34 +1,36 @@
-'use client';
-
-import {useState} from 'react';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import { SkeletonLoaderDisplay } from "./SkeletonLoader";
-import {ApiService} from '@/utils/apiService';
+import React from 'react';
+import {SettingsCard} from '@/components/SettingsCard';
+import {Form, FormField} from '@/components/ui/form';
+import {Toaster} from '@/components/ui/toaster';
+import {useDisplayDriverForm} from '@/hooks/useDisplayDriver';
+import {SkeletonLoaderDisplay} from './SkeletonLoader';
+import {EnumSelect} from '@/components/EnumSelect';
+import {DisplayDriver} from '@/utils/schemas/application';
 
 export function DisplaySettings() {
-    const [selectedDisplay, setSelectedDisplay] = useState<string | null>(null);
-
-    const {data: fetchedDisplay, error, isLoading} = ApiService.useDisplayDriver(
-        (fetchedDisplay) => setSelectedDisplay(fetchedDisplay),
-        (err) => console.error('Failed to load display driver:', err)
-    );
+    const {form, onSubmit, isMutating, isLoading, fetchError} = useDisplayDriverForm();
 
     if (isLoading) return <SkeletonLoaderDisplay/>;
-    if (error) return <div>Error loading https port</div>;
+    if (fetchError) return <div>Error loading Display Driver</div>;
 
     return (
-        <div className="space-y-1">
-            <Select value={selectedDisplay || undefined} onValueChange={setSelectedDisplay}>
-                <Label htmlFor="displayModel">Display Model</Label>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue>{fetchedDisplay}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="WS_7IN3G">WS_7IN3G</SelectItem>
-                    <SelectItem value="WS_9IN7">WS_9IN7</SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
+        <Form {...form}>
+            <Toaster/>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                <SettingsCard isMutating={isMutating} title="Display Driver" description="Set the Display Driver.">
+                    <FormField
+                        control={form.control}
+                        name="displayDriver"
+                        render={({field}) => (
+                            <EnumSelect
+                                field={field}
+                                label="Display Driver"
+                                enumObj={DisplayDriver}
+                            />
+                        )}
+                    />
+                </SettingsCard>
+            </form>
+        </Form>
     );
 }

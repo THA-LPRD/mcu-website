@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import {useEffect} from 'react';
+import {useRouter} from 'next/router';
+import {Spinner} from "@/components/ui/spinner";
 
 export default function SettingsIndex() {
     const router = useRouter();
 
     useEffect(() => {
-        router.replace('/settings/operating-mode');
+        router.replace('/settings/device-config').catch((err) => {
+            console.error('Navigation failed:', err);
+        });
     }, [router]);
 
-    return null; // or a loading spinner
+    return <Spinner size="large" className={"mt-5"}>Loading...</Spinner>;
 }

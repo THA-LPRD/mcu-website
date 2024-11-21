@@ -1,20 +1,26 @@
 import React from 'react';
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod"
+import {zodResolver} from "@hookform/resolvers/zod";
 import {useToast} from "@/hooks/use-toast";
 import {ApiService} from "@/utils/apiService";
-import {LogLevel, logSchema} from "@/utils/schemas/application";
+import {portSchema} from "@/utils/schemas/http-server";
 
-export function useLogLevelForm() {
+const formSchema = z.object({
+    port: portSchema
+});
+
+type PortFormValues = z.infer<typeof formSchema>;
+
+export function usePortForm() {
     const [isEditing, setIsEditing] = React.useState(false);
     const [initialLoad, setInitialLoad] = React.useState(true);
     const { toast } = useToast();
 
-    const form = useForm<z.infer<typeof logSchema>>({
-        resolver: zodResolver(logSchema),
+    const form = useForm<PortFormValues>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
-            logLevel: undefined
+            port: ''
         }
     });
 
@@ -28,22 +34,22 @@ export function useLogLevelForm() {
         return () => subscription.unsubscribe();
     }, [form, isEditing, initialLoad]);
 
-    const { trigger: setLogLevel, isMutating, error: mutationError } = ApiService.useSetLogLevel();
+    const { trigger: setHttpPort, isMutating, error: mutationError } = ApiService.useSetHttpPort();
 
-    const { error: fetchError, isLoading } = ApiService.useLogLevel(
-        (logLevel) => {
+    const { error: fetchError, isLoading } = ApiService.useHttpPort(
+        (port) => {
             if (!isEditing || initialLoad) {
-                if (Object.values(LogLevel).includes(logLevel as LogLevel)) {
-                    form.setValue("logLevel", logLevel as LogLevel, {
+                if (port && !isNaN(parseInt(port.toString()))) {
+                    form.setValue("port", port.toString(), {
                         shouldDirty: false,
                         shouldTouch: false
                     });
                 } else {
-                    console.error("Invalid log level received:", logLevel);
+                    console.error("Invalid port received:", port);
                     toast({
                         variant: "destructive",
                         title: "Error",
-                        description: "Received invalid log level configuration",
+                        description: "Received invalid port configuration",
                     });
                 }
 
@@ -53,31 +59,31 @@ export function useLogLevelForm() {
             }
         },
         (err) => {
-            console.error("Failed to load log level:", err);
+            console.error("Failed to load HTTP port:", err);
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: "Failed to load log level configuration",
+                description: "Failed to load HTTP port configuration",
             });
         }
     );
 
-    async function onSubmit(data: z.infer<typeof logSchema>) {
+    async function onSubmit(data: PortFormValues) {
         try {
-            await setLogLevel({ LogLevel: data.logLevel });
+            await setHttpPort({ Port: data.port });
             setIsEditing(false);
 
             toast({
                 variant: "default",
                 title: "Success",
-                description: "Log level updated successfully.",
+                description: "HTTP port updated successfully.",
             });
         } catch (error) {
-            console.error("Failed to update log level:", error);
+            console.error('HTTP port update failed:', error);
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: mutationError ? mutationError.message : "There was a problem updating the log level.",
+                description: mutationError ? mutationError.message : "There was a problem updating the HTTP port.",
             });
         }
     }
