@@ -32,7 +32,7 @@ export function PNGUpload() {
       
       // Überprüfen, ob eine Datei existiert und vom Typ PNG ist
       if (file && file.type === 'image/png') {
-          uploadImage(file, file.name, '/api/v1/UploadImg')
+          uploadImage(file, file.name, '/api/v2/UploadImg')
               .then((result: UploadResponse) => {
                   alert(result.message);
               })

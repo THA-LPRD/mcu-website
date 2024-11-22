@@ -64,7 +64,7 @@ export function HTMLtoPNG() {
               throw new Error('Blob konnte nicht erstellt werden');
             }
 
-            uploadPNG(blob, "html_conversion.png", '/api/v1/UploadImg')
+            uploadPNG(blob, "html_conversion.png", '/api/v2/UploadImg')
             
             // // Download initiieren
             // const url = URL.createObjectURL(blob);
