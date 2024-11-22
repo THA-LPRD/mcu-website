@@ -4,17 +4,17 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useToast} from "@/hooks/use-toast";
 import {ApiService} from "@/utils/apiService";
-import {LogLevel, logSchema} from "@/utils/schemas/application";
+import {DisplayDriver, DisplayDriverSchema} from "@/utils/schemas/application";
 
-export function useLogLevelForm() {
+export function useDisplayDriverForm() {
     const [isEditing, setIsEditing] = React.useState(false);
     const [initialLoad, setInitialLoad] = React.useState(true);
-    const { toast } = useToast();
+    const {toast} = useToast();
 
-    const form = useForm<z.infer<typeof logSchema>>({
-        resolver: zodResolver(logSchema),
+    const form = useForm<z.infer<typeof DisplayDriverSchema>>({
+        resolver: zodResolver(DisplayDriverSchema),
         defaultValues: {
-            logLevel: undefined
+            displayDriver: undefined
         }
     });
 
@@ -28,22 +28,22 @@ export function useLogLevelForm() {
         return () => subscription.unsubscribe();
     }, [form, isEditing, initialLoad]);
 
-    const { trigger: setLogLevel, isMutating, error: mutationError } = ApiService.useSetLogLevel();
+    const {trigger: setDisplayDriver, isMutating, error: mutationError} = ApiService.useSetDisplayDriver();
 
-    const { error: fetchError, isLoading } = ApiService.useLogLevel(
-        (logLevel) => {
+    const {error: fetchError, isLoading} = ApiService.useDisplayDriver(
+        (displayDriver) => {
             if (!isEditing || initialLoad) {
-                if (Object.values(LogLevel).includes(logLevel as LogLevel)) {
-                    form.setValue("logLevel", logLevel as LogLevel, {
+                if (Object.values(DisplayDriver).includes(displayDriver as DisplayDriver)) {
+                    form.setValue("displayDriver", displayDriver as DisplayDriver, {
                         shouldDirty: false,
                         shouldTouch: false
                     });
                 } else {
-                    console.error("Invalid log level received:", logLevel);
+                    console.error("Invalid display driver received:", displayDriver);
                     toast({
                         variant: "destructive",
                         title: "Error",
-                        description: "Received invalid log level configuration",
+                        description: "Received invalid display driver configuration",
                     });
                 }
 
@@ -53,31 +53,31 @@ export function useLogLevelForm() {
             }
         },
         (err) => {
-            console.error("Failed to load log level:", err);
+            console.error("Failed to load Display Driver:", err);
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: "Failed to load log level configuration",
+                description: "Failed to load display driver configuration",
             });
         }
     );
 
-    async function onSubmit(data: z.infer<typeof logSchema>) {
+    async function onSubmit(data: z.infer<typeof DisplayDriverSchema>) {
         try {
-            await setLogLevel({ LogLevel: data.logLevel });
+            await setDisplayDriver({DisplayDriver: data.displayDriver});
             setIsEditing(false);
 
             toast({
                 variant: "default",
                 title: "Success",
-                description: "Log level updated successfully.",
+                description: "Display driver updated successfully.",
             });
         } catch (error) {
-            console.error("Failed to update log level:", error);
+            console.error("Failed to update Display Driver:", error);
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: mutationError ? mutationError.message : "There was a problem updating the log level.",
+                description: mutationError ? mutationError.message : "There was a problem updating the Display Driver.",
             });
         }
     }

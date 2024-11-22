@@ -1,8 +1,6 @@
-'use client';
-
 import * as React from "react"
-import { usePathname } from 'next/navigation';
-import NextLink, { LinkProps as NextLinkProps } from 'next/link';
+import {usePathname} from 'next/navigation';
+import NextLink, {LinkProps as NextLinkProps} from 'next/link';
 
 import {
     NavigationMenu,
@@ -10,8 +8,8 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
 } from "@/components/ui/navigation-menu"
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-import { cn } from "@/lib/utils"
+import {navigationMenuTriggerStyle} from "@/components/ui/navigation-menu"
+import {cn} from "@/lib/utils"
 
 interface LinkProps extends NextLinkProps {
     children: React.ReactNode;
@@ -21,7 +19,7 @@ import ThemeSelector from '@/components/ui/ThemeSelector';
 import LanguageSelector from './ui/LanguageSelector';
 import RestartButton from './ui/RestartButton';
 
-const Link: React.FC<LinkProps> = ({ href, ...props }) => {
+const Link: React.FC<LinkProps> = ({href, ...props}) => {
     const pathname = usePathname();
     const isActive = href === '/' ? pathname === href : pathname.startsWith(href.toString());
 
@@ -54,21 +52,24 @@ export default function Navbar() {
                 {/* Right Side: Switches (Language, Theme, Restart) */}
                 <div className="flex items-center space-x-4">
                     <LanguageSelector/>
-                    <ThemeSelector />
-                    <RestartButton />
+                    <ThemeSelector/>
+                    <RestartButton/>
                 </div>
             </div>
 
             {/* Bottom Section: Navigation Links */}
             <NavigationMenu className="!max-w-full !block">
                 <NavigationMenuList>
-                    <NavigationMenuItem className={cn( "flex-1", isActive('/') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
+                    <NavigationMenuItem
+                        className={cn("flex-1", isActive('/') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
                         <Link href="/">Home</Link>
                     </NavigationMenuItem>
-                    <NavigationMenuItem className={cn( "flex-1", isActive('/upload') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
+                    <NavigationMenuItem
+                        className={cn("flex-1", isActive('/upload') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
                         <Link href="/upload">Image Upload</Link>
                     </NavigationMenuItem>
-                    <NavigationMenuItem className={cn( "flex-1", isActive('/settings') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
+                    <NavigationMenuItem
+                        className={cn("flex-1", isActive('/settings') ? 'bg-accent text-accent-foreground' : 'bg-muted')}>
                         <Link href="/settings">Settings</Link>
                     </NavigationMenuItem>
                 </NavigationMenuList>

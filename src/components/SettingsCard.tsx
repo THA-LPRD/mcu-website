@@ -1,18 +1,25 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ReactNode } from "react";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {ReactNode} from "react";
 
-interface AdvancedSettingsCardProps {
+interface SettingsCardProps {
     children: ReactNode;
     isMutating: boolean;
+    title: string;
+    description: string;
 }
 
-export function SettingsCard({ children, isMutating }: AdvancedSettingsCardProps) {
+export function SettingsCard({
+                                 children,
+                                 isMutating,
+                                 title,
+                                 description,
+                             }: SettingsCardProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Advanced Settings</CardTitle>
-                <CardDescription>Set the Log Level.</CardDescription>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardContent>{children}</CardContent>
             <CardFooter className="border-t px-6 py-4">
