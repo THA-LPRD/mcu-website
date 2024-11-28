@@ -12,6 +12,7 @@ export enum LogLevel {
 export enum DisplayDriver {
     WS_7IN3G = "WS_7IN3G",
     WS_9IN7 = "WS_9IN7",
+    GD_7IN5 = "GD_7IN5",
 }
 
 export const logSchema = z.object({
