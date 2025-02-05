@@ -36,22 +36,22 @@ type EAPCertFieldName = `${Lowercase<Mode>}WiFiEAP_Cert`;
 
 interface FieldNames {
     ssid: SSIDFieldName;
-    // auth_mode: AuthModeFieldName;
     password: PasswordFieldName;
-    // eap_id: EAPIDFieldName;
-    // eap_username: EAPUsernameFieldName;
-    // eap_cert: EAPCertFieldName;
+    auth_mode?: AuthModeFieldName;
+    eap_id?: EAPIDFieldName;
+    eap_username?: EAPUsernameFieldName;
+    eap_cert?: EAPCertFieldName;
 }
 
 const getFieldNames = (mode: Mode): FieldNames => {
     const prefix = mode.toLowerCase();
     return {
         ssid: `${prefix}WiFiSSID` as SSIDFieldName,
-        // auth_mode: `${prefix}WiFiAuth_Mode` as AuthModeFieldName,
         password: `${prefix}WiFiPassword` as PasswordFieldName,
-        // eap_id: `${prefix}WiFiEAP_ID` as EAPIDFieldName,
-        // eap_username: `${prefix}WiFiEAP_Username` as EAPUsernameFieldName,
-        // eap_cert: `${prefix}WiFiEAP_Cert` as EAPCertFieldName,
+        auth_mode: `${prefix}WiFiAuth_Mode` as AuthModeFieldName,
+        eap_id: `${prefix}WiFiEAP_ID` as EAPIDFieldName,
+        eap_username: `${prefix}WiFiEAP_Username` as EAPUsernameFieldName,
+        eap_cert: `${prefix}WiFiEAP_Cert` as EAPCertFieldName,
     };
 };
 
@@ -109,8 +109,7 @@ const ModeContent = ({
                     <CardContent>
                     <FormField
                         control={form.control}
-                        // name={fieldNames.auth_mode}
-                        name="networkWiFiAuth_Mode"
+                        name={fieldNames.auth_mode}
                         render={({ field }) => (
                         <FormControl>
                                 
@@ -144,7 +143,7 @@ const ModeContent = ({
                             <TabsContent key='EAP' value='EAP'>
                                 <FormField
                                     control={form.control}
-                                    name="serverWiFiEAP_ID"
+                                    name={fieldNames.eap_id}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Anonymous identity</FormLabel>
@@ -160,7 +159,7 @@ const ModeContent = ({
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="serverWiFiEAP_Username"
+                                    name={fieldNames.eap_username}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>User name</FormLabel>
@@ -192,7 +191,7 @@ const ModeContent = ({
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="serverWiFiEAP_Cert"
+                                    name={fieldNames.eap_cert}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>EAP Cert</FormLabel>
