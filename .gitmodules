@@ -1,3 +1,4 @@
 [submodule "src/html-templates"]
 	path = src/html-templates
 	url = git@github.com:THA-LPRD/html-templates.git
+	branch = dev
