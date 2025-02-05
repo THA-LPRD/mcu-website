@@ -4,7 +4,7 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useToast} from "@/hooks/use-toast";
 import {ApiService} from "@/utils/apiService";
-import {Mode} from "@/types/deviceConfig";
+import {Mode, Auth_Mode} from "@/types/deviceConfig";
 import type {
     DeviceConfigRequest,
     StandaloneConfigRequest,
@@ -19,19 +19,28 @@ const urlSchema = z.string().url({message: "Invalid URL format"});
 const deviceConfigSchema = z.discriminatedUnion("Mode", [
     z.object({
         Mode: z.literal(Mode.Standalone),
+        Auth_Mode: z.literal(Auth_Mode.PSK),
         standaloneWiFiSSID: nonEmptyStringSchema,
         standaloneWiFiPassword: nonEmptyStringSchema,
     }),
     z.object({
         Mode: z.literal(Mode.Network),
+        networkAuth_Mode: z.literal(Auth_Mode.PSK),
         networkWiFiSSID: nonEmptyStringSchema,
         networkWiFiPassword: passwordSchema,
+        networkWiFiEAP_ID: nonEmptyStringSchema,
+        networkWiFiEAP_Username: nonEmptyStringSchema,
+        networkWiFiEAP_Cert: nonEmptyStringSchema,
     }),
     z.object({
         Mode: z.literal(Mode.Server),
+        serverAuth_Mode: z.literal(Auth_Mode.EAP),
         serverWiFiSSID: nonEmptyStringSchema,
         serverWiFiPassword: passwordSchema,
         serverURL: urlSchema,
+        serverWiFiEAP_ID: nonEmptyStringSchema,
+        serverWiFiEAP_Username: nonEmptyStringSchema,
+        serverWiFiEAP_Cert: nonEmptyStringSchema,
     })
 ]);
 
@@ -48,10 +57,18 @@ export function useDeviceConfigForm() {
             standaloneWiFiSSID: '',
             standaloneWiFiPassword: '',
             networkWiFiSSID: '',
+            networkAuth_Mode: '',
             networkWiFiPassword: '',
+            networkWiFiEAP_ID: '',
+            networkWiFiEAP_Username: '',
+            networkWiFiEAP_Cert: '',
             serverWiFiSSID: '',
+            serverAuth_Mode: '',
             serverWiFiPassword: '',
-            serverURL: ''
+            serverURL: '',
+            serverWiFiEAP_ID: '',
+            serverWiFiEAP_Username: '',
+            serverWiFiEAP_Cert: '',
         }
     });
 
@@ -71,22 +88,23 @@ export function useDeviceConfigForm() {
                 const mode = value.Mode;
                 try {
                     if (mode === Mode.Standalone) {
-                        form.setValue('networkWiFiSSID', '');
-                        form.setValue('networkWiFiPassword', '');
-                        form.setValue('serverWiFiSSID', '');
-                        form.setValue('serverWiFiPassword', '');
-                        form.setValue('serverURL', '');
+                        form.setValue('standaloneWiFiSSID', '');
+                        form.setValue('standaloneWiFiPassword', '');
                     } else if (mode === Mode.Network) {
-                        form.setValue('standaloneWiFiSSID', '');
-                        form.setValue('standaloneWiFiPassword', '');
+                        form.setValue('networkWiFiSSID', '');
+                        form.setValue('networkWiFiAuth_Mode', '');
+                        form.setValue('networkWiFiPassword', '')
+                        form.setValue('networkWiFiEAP_Username', '');
+                        form.setValue('networkWiFiEAP_Cert', '');
+                        form.setValue('networkWiFiPassword', '');
+                    } else if (mode === Mode.Server) {
                         form.setValue('serverWiFiSSID', '');
+                        form.setValue('serverWiFiAuth_Mode', '');
+                        form.setValue('serverWiFiPassword', '');
+                        form.setValue('serverWiFiEAP_Username', '');
+                        form.setValue('serverWiFiEAP_Cert', '');
                         form.setValue('serverWiFiPassword', '');
                         form.setValue('serverURL', '');
-                    } else if (mode === Mode.Server) {
-                        form.setValue('standaloneWiFiSSID', '');
-                        form.setValue('standaloneWiFiPassword', '');
-                        form.setValue('networkWiFiSSID', '');
-                        form.setValue('networkWiFiPassword', '');
                     }
                 } catch (error) {
                     console.error("Error setting form values:", error);
@@ -134,6 +152,7 @@ export function useDeviceConfigForm() {
     const fetchError = loadError || apiError;
 
     async function onSubmit(data: DeviceConfigFormData) {
+        console.log(data);
         try {
             let updateRequest: DeviceConfigRequest;
             switch (data.Mode) {
@@ -148,15 +167,23 @@ export function useDeviceConfigForm() {
                     updateRequest = {
                         Mode: Mode.Network,
                         WiFiSSID: data.networkWiFiSSID,
-                        WiFiPassword: data.networkWiFiPassword
+                        WiFiAuth_Mode: data.Auth_Mode,
+                        WiFiPassword: data.networkWiFiPassword,
+                        WiFiEAPID: data.networkWiFiEAP_ID,
+                        WiFiEAPUsername: data.networkWiFiEAP_Username,
+                        WiFiEAPCert: data.networkWiFiEAP_Cert
                     } as NetworkConfigRequest;
                     break;
                 case Mode.Server:
                     updateRequest = {
                         Mode: Mode.Server,
+                        WiFiAuth_Mode: data.Auth_Mode,
                         WiFiSSID: data.serverWiFiSSID,
                         WiFiPassword: data.serverWiFiPassword,
-                        serverURL: data.serverURL
+                        WiFiEAPID: data.serverWiFiEAP_ID,
+                        WiFiEAPUsername: data.serverWiFiEAP_Username,
+                        WiFiEAPCert: data.serverWiFiEAP_Cert,
+                        ServerURL: data.serverURL
                     } as ServerConfigRequest;
                     break;
                 default:
