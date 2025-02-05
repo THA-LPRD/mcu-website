@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Toaster } from "@/components/ui/toaster";
 import { useDeviceConfigForm } from '@/hooks/useDeviceConfig';
 import { SkeletonLoader } from '@/components/settings/device-config/SkeletonLoader';
-import { Mode, Auth_Mode } from '@/types/deviceConfig';
+import { Mode } from '@/types/deviceConfig';
 import { Input } from '@/components/ui/input';
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,22 +36,22 @@ type EAPCertFieldName = `${Lowercase<Mode>}WiFiEAP_Cert`;
 
 interface FieldNames {
     ssid: SSIDFieldName;
-    auth_mode: AuthModeFieldName;
+    // auth_mode: AuthModeFieldName;
     password: PasswordFieldName;
-    eap_id: EAPIDFieldName;
-    eap_username: EAPUsernameFieldName;
-    eap_cert: EAPCertFieldName;
+    // eap_id: EAPIDFieldName;
+    // eap_username: EAPUsernameFieldName;
+    // eap_cert: EAPCertFieldName;
 }
 
 const getFieldNames = (mode: Mode): FieldNames => {
     const prefix = mode.toLowerCase();
     return {
         ssid: `${prefix}WiFiSSID` as SSIDFieldName,
-        auth_mode: `${prefix}WiFiAuth_Mode` as AuthModeFieldName,
+        // auth_mode: `${prefix}WiFiAuth_Mode` as AuthModeFieldName,
         password: `${prefix}WiFiPassword` as PasswordFieldName,
-        eap_id: `${prefix}WiFiEAP_ID` as EAPIDFieldName,
-        eap_username: `${prefix}WiFiEAP_Username` as EAPUsernameFieldName,
-        eap_cert: `${prefix}WiFiEAP_Cert` as EAPCertFieldName,
+        // eap_id: `${prefix}WiFiEAP_ID` as EAPIDFieldName,
+        // eap_username: `${prefix}WiFiEAP_Username` as EAPUsernameFieldName,
+        // eap_cert: `${prefix}WiFiEAP_Cert` as EAPCertFieldName,
     };
 };
 
@@ -105,17 +105,16 @@ const ModeContent = ({
                 </div>
 
 
-                {/*(mode === Mode.Server || mode === Mode.Network) && (<Card className='mb-4'>
+                {(mode === Mode.Server || mode === Mode.Network) && (<Card className='mb-4'>
                     <CardContent>
                     <FormField
                         control={form.control}
-                        name={fieldNames.auth_mode}
+                        // name={fieldNames.auth_mode}
+                        name="networkWiFiAuth_Mode"
                         render={({ field }) => (
                         <FormControl>
                                 
-                                
-
-                        <Tabs defaultValue={field.value} onValueChange={field.onChange}  className="w-full">
+                        <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
                             <TabsList className="grid w-full grid-cols-2 mt-4">
                                 <TabsTrigger key='PSK' value='PSK'>
                                     PSK
@@ -216,7 +215,7 @@ const ModeContent = ({
             />
             </CardContent>
             </Card>
-                )*/}
+                    )}
 
                 {mode === Mode.Standalone && (<FormField
                     control={form.control}
