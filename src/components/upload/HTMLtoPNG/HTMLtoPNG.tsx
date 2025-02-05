@@ -65,16 +65,6 @@ export function HTMLtoPNG() {
             }
 
             uploadPNG(blob, "html_conversion.png", '/api/v2/UploadImg')
-            
-            // // Download initiieren
-            // const url = URL.createObjectURL(blob);
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.download = 'preview.png';
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-            // URL.revokeObjectURL(url);
           }, 'image/png');
         } catch (error) {
             console.log(error);
