@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Toaster } from "@/components/ui/toaster";
 import { useDeviceConfigForm } from '@/hooks/useDeviceConfig';
 import { SkeletonLoader } from '@/components/settings/device-config/SkeletonLoader';
-import { Mode } from '@/types/deviceConfig';
+import {Auth_Mode, Mode} from '@/types/deviceConfig';
 import { Input } from '@/components/ui/input';
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,20 +27,20 @@ const getModeDescription = (mode: Mode) => {
     }
 };
 
-type SSIDFieldName = `${Lowercase<Mode>}WiFiSSID`;
-type AuthModeFieldName = `${Lowercase<Mode>}WiFiAuth_Mode`;
-type PasswordFieldName = `${Lowercase<Mode>}WiFiPassword`;
-type EAPIDFieldName = `${Lowercase<Mode>}WiFiEAP_ID`;
-type EAPUsernameFieldName = `${Lowercase<Mode>}WiFiEAP_Username`;
-type EAPCertFieldName = `${Lowercase<Mode>}WiFiEAP_Cert`;
+type SSIDFieldName = "standaloneWiFiSSID" | "networkWiFiSSID" | "serverWiFiSSID";
+type AuthModeFieldName = "networkWiFiAuth_Mode" | "serverWiFiAuth_Mode";
+type PasswordFieldName = "standaloneWiFiPassword" | "networkWiFiPassword" | "serverWiFiPassword";
+type EAPIDFieldName = "networkWiFiEAP_ID" | "serverWiFiEAP_ID";
+type EAPUsernameFieldName = "networkWiFiEAP_Username" | "serverWiFiEAP_Username";
+type EAPCertFieldName = "networkWiFiEAP_Cert" | "serverWiFiEAP_Cert";
 
 interface FieldNames {
     ssid: SSIDFieldName;
     password: PasswordFieldName;
-    auth_mode?: AuthModeFieldName;
-    eap_id?: EAPIDFieldName;
-    eap_username?: EAPUsernameFieldName;
-    eap_cert?: EAPCertFieldName;
+    auth_mode: AuthModeFieldName;
+    eap_id: EAPIDFieldName;
+    eap_username: EAPUsernameFieldName;
+    eap_cert: EAPCertFieldName;
 }
 
 const getFieldNames = (mode: Mode): FieldNames => {
@@ -113,7 +113,14 @@ const ModeContent = ({
                         render={({ field }) => (
                         <FormControl>
                                 
-                        <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
+                        <Tabs
+                            defaultValue={field.value}
+                            onValueChange={(value) => {
+                                field.onChange(value);
+                                form.setValue(fieldNames.auth_mode, value as Auth_Mode);
+                            }}
+                            className="w-full"
+                        >
                             <TabsList className="grid w-full grid-cols-2 mt-4">
                                 <TabsTrigger key='PSK' value='PSK'>
                                     PSK
@@ -274,8 +281,8 @@ export default function DeviceConfigPage() {
         }
     }, [selectedMode]);
 
-    // if (isLoading) return <SettingsLayout><SkeletonLoader/></SettingsLayout>;
-    // if (fetchError) return <div>Error loading device config</div>;
+    if (isLoading) return <SettingsLayout><SkeletonLoader/></SettingsLayout>;
+    if (fetchError) return <div>Error loading device config</div>;
 
     return (
         <SettingsLayout>

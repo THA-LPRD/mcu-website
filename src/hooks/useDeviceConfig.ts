@@ -14,6 +14,14 @@ import type {
 
 export type DeviceConfigFormData = z.infer<typeof deviceConfigSchema>;
 const nonEmptyStringSchema = z.string().min(1, {message: "Value cannot be empty"});
+const optionalNonEmptyStringSchema = z.preprocess(
+    (val) => {
+        if (typeof val === "string" && val.trim() === "") return undefined;
+        return val;
+    },
+    z.string().min(1, { message: "Value cannot be empty" }).optional()
+);
+
 const passwordSchema = z.string().min(8, {message: "Password must be longer than 8 characters"});
 const urlSchema = z.string().url({message: "Invalid URL format"});
 const deviceConfigSchema = z.discriminatedUnion("Mode", [
@@ -26,10 +34,10 @@ const deviceConfigSchema = z.discriminatedUnion("Mode", [
         Mode: z.literal(Mode.Network),
         networkWiFiAuth_Mode: z.nativeEnum(Auth_Mode),
         networkWiFiSSID: nonEmptyStringSchema,
-        networkWiFiPassword: passwordSchema,
-        networkWiFiEAP_ID: nonEmptyStringSchema.optional(),
-        networkWiFiEAP_Username: nonEmptyStringSchema.optional(),
-        networkWiFiEAP_Cert: nonEmptyStringSchema.optional(),
+        networkWiFiPassword: passwordSchema.optional(),
+        networkWiFiEAP_ID: optionalNonEmptyStringSchema,
+        networkWiFiEAP_Username: optionalNonEmptyStringSchema,
+        networkWiFiEAP_Cert: optionalNonEmptyStringSchema,
     }),
     z.object({
         Mode: z.literal(Mode.Server),
@@ -37,11 +45,12 @@ const deviceConfigSchema = z.discriminatedUnion("Mode", [
         serverWiFiSSID: nonEmptyStringSchema,
         serverWiFiPassword: passwordSchema,
         serverURL: urlSchema,
-        serverWiFiEAP_ID: nonEmptyStringSchema.optional(),
-        serverWiFiEAP_Username: nonEmptyStringSchema.optional(),
-        serverWiFiEAP_Cert: nonEmptyStringSchema.optional(),
+        serverWiFiEAP_ID: optionalNonEmptyStringSchema,
+        serverWiFiEAP_Username: optionalNonEmptyStringSchema,
+        serverWiFiEAP_Cert: optionalNonEmptyStringSchema,
     })
 ]);
+
 
 export function useDeviceConfigForm() {
     const [loadError, setLoadError] = React.useState<Error | null>(null);
@@ -58,16 +67,16 @@ export function useDeviceConfigForm() {
             networkWiFiSSID: '',
             networkWiFiAuth_Mode: Auth_Mode.PSK,
             networkWiFiPassword: '',
-            networkWiFiEAP_ID: '',
-            networkWiFiEAP_Username: '',
-            networkWiFiEAP_Cert: '',
+            networkWiFiEAP_ID: undefined,
+            networkWiFiEAP_Username: undefined,
+            networkWiFiEAP_Cert: undefined,
             serverWiFiSSID: '',
             serverWiFiAuth_Mode: Auth_Mode.PSK,
             serverWiFiPassword: '',
             serverURL: '',
-            serverWiFiEAP_ID: '',
-            serverWiFiEAP_Username: '',
-            serverWiFiEAP_Cert: '',
+            serverWiFiEAP_ID: undefined,
+            serverWiFiEAP_Username: undefined,
+            serverWiFiEAP_Cert: undefined,
         }
     });
 
@@ -162,27 +171,68 @@ export function useDeviceConfigForm() {
                     } as StandaloneConfigRequest;
                     break;
                 case Mode.Network:
-                    updateRequest = {
-                        Mode: Mode.Network,
-                        WiFiSSID: data.networkWiFiSSID,
-                        WiFiAuth_Mode: data.networkWiFiAuth_Mode,
-                        WiFiPassword: data.networkWiFiPassword,
-                        WiFiEAPID: data.networkWiFiEAP_ID,
-                        WiFiEAPUsername: data.networkWiFiEAP_Username,
-                        WiFiEAPCert: data.networkWiFiEAP_Cert
-                    } as NetworkConfigRequest;
+                    // updateRequest = {
+                    //     Mode: Mode.Network,
+                    //     WiFiSSID: data.networkWiFiSSID,
+                    //     WiFiAuth_Mode: data.networkWiFiAuth_Mode,
+                    //     WiFiPassword: data.networkWiFiPassword,
+                    //     WiFiEAPID: data.networkWiFiEAP_ID,
+                    //     WiFiEAPUsername: data.networkWiFiEAP_Username,
+                    //     WiFiEAPCert: data.networkWiFiEAP_Cert
+                    // } as NetworkConfigRequest;
+                    if (data.networkWiFiAuth_Mode === Auth_Mode.PSK) {
+                        updateRequest = {
+                            Mode: Mode.Network,
+                            WiFiSSID: data.networkWiFiSSID,
+                            WiFiPassword: data.networkWiFiPassword,
+                            WiFiAuth_Mode: Auth_Mode.PSK,
+                            WiFiEAPID: undefined,
+                            WiFiEAPUsername: undefined,
+                            WiFiEAPCert: undefined
+                        } as NetworkConfigRequest;
+                    } else {
+                        updateRequest = {
+                            Mode: Mode.Network,
+                            WiFiSSID: data.networkWiFiSSID,
+                            WiFiAuth_Mode: data.networkWiFiAuth_Mode,
+                            WiFiPassword: data.networkWiFiPassword,
+                            WiFiEAPID: data.networkWiFiEAP_ID,
+                            WiFiEAPUsername: data.networkWiFiEAP_Username,
+                            WiFiEAPCert: data.networkWiFiEAP_Cert
+                        } as NetworkConfigRequest;
+                    }
                     break;
                 case Mode.Server:
-                    updateRequest = {
-                        Mode: Mode.Server,
-                        WiFiAuth_Mode: data.serverWiFiAuth_Mode,
-                        WiFiSSID: data.serverWiFiSSID,
-                        WiFiPassword: data.serverWiFiPassword,
-                        WiFiEAPID: data.serverWiFiEAP_ID,
-                        WiFiEAPUsername: data.serverWiFiEAP_Username,
-                        WiFiEAPCert: data.serverWiFiEAP_Cert,
-                        ServerURL: data.serverURL
-                    } as ServerConfigRequest;
+                    // updateRequest = {
+                    //     Mode: Mode.Server,
+                    //     WiFiAuth_Mode: data.serverWiFiAuth_Mode,
+                    //     WiFiSSID: data.serverWiFiSSID,
+                    //     WiFiPassword: data.serverWiFiPassword,
+                    //     WiFiEAPID: data.serverWiFiEAP_ID,
+                    //     WiFiEAPUsername: data.serverWiFiEAP_Username,
+                    //     WiFiEAPCert: data.serverWiFiEAP_Cert,
+                    //     ServerURL: data.serverURL
+                    // } as ServerConfigRequest;
+                    if (data.serverWiFiAuth_Mode === Auth_Mode.PSK) {
+                        updateRequest = {
+                            Mode: Mode.Server,
+                            WiFiSSID: data.serverWiFiSSID,
+                            WiFiPassword: data.serverWiFiPassword,
+                            ServerURL: data.serverURL,
+                            WiFiAuth_Mode: Auth_Mode.PSK
+                        } as ServerConfigRequest;
+                    } else {
+                        updateRequest = {
+                            Mode: Mode.Server,
+                            WiFiAuth_Mode: data.serverWiFiAuth_Mode,
+                            WiFiSSID: data.serverWiFiSSID,
+                            WiFiPassword: data.serverWiFiPassword,
+                            WiFiEAPID: data.serverWiFiEAP_ID,
+                            WiFiEAPUsername: data.serverWiFiEAP_Username,
+                            WiFiEAPCert: data.serverWiFiEAP_Cert,
+                            ServerURL: data.serverURL
+                        } as ServerConfigRequest;
+                    }
                     break;
                 default:
                     throw new Error("Invalid mode");
